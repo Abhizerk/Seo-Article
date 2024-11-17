@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Generate SEO-optimized articles with compelling titles, headings, meta descriptions, alt tags for images, and internal links.">
+    <title>SEO Article Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            padding-bottom: 60px; /* Ensure content doesn't hide behind fixed footer */
+        }
+
+        /* Promo Banner Style */
+        .promo-banner {
+            background-color: #ff9800;
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            padding: 10px 0;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .promo-banner a {
+            color: white;
+            text-decoration: none;
+            font-weight: normal;
+            margin-left: 10px;
+        }
+
+        .promo-banner:hover {
+            background-color: #e68900;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #articleContent {
+            display: none;
+            margin-top: 30px;
+        }
+
+        #articleText {
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 5px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        h2, h3 {
+            color: #333;
+        }
+
+        .copy-btn {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .copy-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .loading {
+            font-size: 36px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .word-count {
+            text-align: center;
+            font-size: 16px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        /* Footer Style */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            left: 0;
+        }
+
+        footer h4 {
+            margin-bottom: 10px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        .social-links {
+            margin-top: 10px;
+        }
+
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 18px;
+        }
+
+        .social-links a:hover {
+            color: #ff9800;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Promo Banner -->
+    <div class="promo-banner">
+        Experience the best with our premium plans – unlock exclusive features now! <a href="#">Coming soon</a>
+    </div>
+
+    <div class="container">
+        <h1>SEO Article Generator</h1>
+        <form id="urlForm">
+            <label for="urlInput">Enter a topic to generate SEO content:</label>
+            <input type="text" id="urlInput" placeholder="Enter a topic" required>
+            <button type="submit">Generate Article</button>
+        </form>
+
+        <!-- Loading message with dog emoji -->
+        <div class="loading" id="loadingMessage">🐕 Generating article, please wait...</div>
+
+        <div id="articleContent">
+            <h2>Generated Article:</h2>
+            <div id="articleText"></div>
+            <div class="word-count" id="wordCount"></div>
+
+            <!-- Copy Button -->
+            <button class="copy-btn" id="copyButton">Copy Article</button>
+        </div>
+
+        <div class="error" id="errorMessage"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <h4>Your Company Name</h4>
+        <p>Leading the way in content generation and SEO optimization.</p>
+        <div class="social-links">
+            <a href="#">Facebook</a>
+            <a href="#">Twitter</a>
+            <a href="#">Instagram</a>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('urlForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const topic = document.getElementById('urlInput').value;
+            const apiKey = 'xai-Bm6NbgDbkD8V1BlbveUiqa7YnrKCVZBCPzrN1POwCX7EnmjCXuN0vgHP9Yn4hBAbd8GKjOsLOa5GnfqV'; // Replace with your actual API key
+            const apiEndpoint = 'https://api.x.ai/v1/chat/completions'; // Replace with actual API endpoint
+
+            // Show the loading message when generating the article
+            document.getElementById('loadingMessage').style.display = 'block';
+            document.getElementById('articleContent').style.display = 'none';
+            document.getElementById('errorMessage').textContent = '';
+
+            // Construct the payload for generating the article
+            const articleRequestData = {
+                messages: [
+                    {
+                        role: 'system',
+                        content: 'You are an assistant generating an SEO-optimized article on the given topic. The article should include a compelling title, headings, a table of contents, meta descriptions, alt tags for images, and internal links.'
+                    },
+                    {
+                        role: 'user',
+                        content: `Write a human-like SEO article on the topic: "${topic}". Make it readable, engaging, and well-structured with headings (H2, H3), meta descriptions, alt tags for images, and include internal links to relevant pages. Additionally, provide a table of contents at the start of the article if it's long.`
+                    }
+                ],
+                model: 'grok-beta',
+                stream: false,
+                temperature: 0.7
+            };
+
+            try {
+                // Sending the request to generate the article
+                const response = await fetch(apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify(articleRequestData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to fetch article content');
+                }
+
+                if (data.choices && data.choices[0] && data.choices[0].message) {
+                    // Extracting the content from the API response
+                    let articleContent = data.choices[0].message.content;
+
+                    // Ensure the article has SEO structure (title, meta description, headings)
+                    if (!articleContent.includes('<h1>')) {
+                        articleContent = `<h1>${topic} - SEO Optimized Article</h1>` + articleContent;
+                    }
+                    if (!articleContent.includes('<meta name="description"')) {
+                        articleContent = `<meta name="description" content="This is an SEO-optimized article about ${topic}.">` + articleContent;
+                    }
+
+                    // Check word count
+                    const wordCount = articleContent.split(/\s+/).length;
+
+                    // If article has less than 500 words, request more content
+                    if (wordCount < 500) {
+                        const additionalRequestData = {
+                            messages: [
+                                {
+                                    role: 'system',
+                                    content: 'You are an assistant enhancing an article to reach 500 words, ensuring SEO optimization.'
+                                },
+                                {
+                                    role: 'user',
+                                    content: `Expand the article on the topic "${topic}" to reach at least 500 words while maintaining SEO standards.`
+                                }
+                            ],
+                            model: 'grok-beta',
+                            stream: false,
+                            temperature: 0.7
+                        };
+
+                        const additionalResponse = await fetch(apiEndpoint, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${apiKey}`
+                            },
+                            body: JSON.stringify(additionalRequestData)
+                        });
+
+                        const additionalData = await additionalResponse.json();
+                        articleContent = additionalData.choices[0].message.content;
+                    }
+
+                    // Display the article and word count
+                    document.getElementById('articleText').innerHTML = articleContent;
+                    document.getElementById('articleContent').style.display = 'block';
+                    document.getElementById('wordCount').textContent = `Word Count: ${wordCount}`;
+                } else {
+                    throw new Error('Failed to generate valid article content.');
+                }
+
+            } catch (error) {
+                document.getElementById('errorMessage').textContent = `Error: ${error.message}`;
+            } finally {
+                document.getElementById('loadingMessage').style.display = 'none';
+            }
+        });
+
+        // Copy Article Button Functionality
+        document.getElementById('copyButton').addEventListener('click', function() {
+            const articleText = document.getElementById('articleText').innerText;
+            navigator.clipboard.writeText(articleText)
+                .then(() => alert('Article copied to clipboard!'))
+                .catch(err => alert('Failed to copy article: ' + err));
+        });
+    </script>
+</body>
+</html>
